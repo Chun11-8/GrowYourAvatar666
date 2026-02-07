@@ -1,24 +1,30 @@
-name: Force Sync from Main
+name: Force Sync from Private Main
 on:
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch: # Allows you to click the button manually
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Destination
+      - name: Checkout GrowYourAvatar666
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # This token allows the action to push changes back to THIS repo
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Force Merge from Main
+      - name: Force Merge from Private Original
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
-          # Add the main repo as a remote
-          git remote add upstream https://github.com/Chun11-8/growyouravatar.git
+          
+          # We use the SYNC_TOKEN secret to "unlock" your private repo
+          git remote add upstream https://x-access-token:${{ secrets.SYNC_TOKEN }}@github.com/Chun11-8/growyouravatar.git
+          
           git fetch upstream
-          # Force the merge even with unrelated histories
-          git merge upstream/main --allow-unrelated-histories -m "Syncing from main repo"
+          
+          # Merge changes even if the histories are unrelated (common with templates)
+          git merge upstream/main --allow-unrelated-histories -m "Syncing latest updates from private main repo"
+          
+          # Push the combined code back to your GrowYourAvatar666 main branch
           git push origin main
