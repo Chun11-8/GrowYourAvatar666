@@ -11,7 +11,7 @@ interface Question {
 const ManualQuizInput: React.FC = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState<Question[]>(
-        Array.from({ length: 10 }, (_, i) => ({
+        Array.from({ length: 10 }, () => ({
             id: Math.random().toString(36).substr(2, 9),
             question: '',
             options: ['', '', '', ''],
